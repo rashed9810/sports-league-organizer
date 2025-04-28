@@ -132,56 +132,65 @@ The frontend is designed to integrate with a Django backend through the followin
 ### Frontend Setup
 
 1. Clone the repository:
-   \`\`\`bash
-   git clone https://github.com/yourusername/sports-league-organizer.git
+
+   ```bash
+   git clone https://github.com/rashed9810/sports-league-organizer.git
    cd sports-league-organizer
-   \`\`\`
+   ```
 
 2. Install dependencies:
-   \`\`\`bash
+
+   ```bash
    npm install
-   \`\`\`
+   ```
 
 3. Create a `.env.local` file with required environment variables:
-   \`\`\`
+
+   ```
    NEXT_PUBLIC_API_URL=http://localhost:8000/api
-   \`\`\`
+   ```
 
 4. Run the development server:
-   \`\`\`bash
+
+   ```bash
    npm run dev
-   \`\`\`
+   ```
 
 5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ### Backend Setup (Django)
 
 1. Create a virtual environment:
-   \`\`\`bash
+
+   ```bash
    python -m venv venv
    source venv/bin/activate # On Windows: venv\Scripts\activate
-   \`\`\`
+   ```
 
 2. Install dependencies:
-   \`\`\`bash
+
+   ```bash
    pip install -r requirements.txt
-   \`\`\`
+   ```
 
 3. Set up the database:
-   \`\`\`bash
+
+   ```bash
    cd backend
    python manage.py migrate
-   \`\`\`
+   ```
 
 4. Create a superuser:
-   \`\`\`bash
+
+   ```bash
    python manage.py createsuperuser
-   \`\`\`
+   ```
 
 5. Run the development server:
-   \`\`\`bash
+
+   ```bash
    python manage.py runserver
-   \`\`\`
+   ```
 
 6. The API will be available at [http://localhost:8000/api/](http://localhost:8000/api/)
 
@@ -216,19 +225,20 @@ Once the backend is implemented, API documentation will be available at:
 ### Frontend Testing
 
 - Run frontend tests:
-  \`\`\`bash
+
+  ```bash
   npm test
-  \`\`\`
+  ```
 
 - Check frontend manually using the testing tools at [http://localhost:3000/testing](http://localhost:3000/testing)
 
 ### Backend Testing
 
 - Run backend tests:
-  \`\`\`bash
+  ```bash
   cd backend
   python manage.py test
-  \`\`\`
+  ```
 
 ## Deployment
 
@@ -236,10 +246,10 @@ Once the backend is implemented, API documentation will be available at:
 
 The frontend can be deployed to Vercel:
 
-\`\`\`bash
+```bash
 npm run build
 vercel deploy
-\`\`\`
+```
 
 ### Backend Deployment
 
