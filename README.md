@@ -37,7 +37,7 @@ The Local Sports League Organizer is a full-stack application built with Next.js
 
 ## Project Structure
 
-\`\`\`
+```
 sports-league-organizer/
 ├── app/                      # Next.js App Router pages
 │   ├── analytics/            # Analytics dashboard
@@ -74,19 +74,21 @@ sports-league-organizer/
 ├── package.json              # Frontend dependencies
 ├── requirements.txt          # Backend dependencies
 └── README.md                 # Project documentation
-\`\`\`
+```
 
 ## Frontend-Backend Integration Points
 
 The frontend is designed to integrate with a Django backend through the following API endpoints:
 
 ### Authentication
+
 - `POST /api/auth/login/` - User login
 - `POST /api/auth/register/` - User registration
 - `POST /api/auth/logout/` - User logout
 - `GET /api/auth/user/` - Get current user
 
 ### Teams
+
 - `GET /api/teams/` - List all teams
 - `POST /api/teams/` - Create a new team
 - `GET /api/teams/:id/` - Get team details
@@ -96,6 +98,7 @@ The frontend is designed to integrate with a Django backend through the followin
 - `POST /api/teams/:id/players/` - Add player to team
 
 ### Leagues
+
 - `GET /api/leagues/` - List all leagues
 - `POST /api/leagues/` - Create a new league
 - `GET /api/leagues/:id/` - Get league details
@@ -105,17 +108,20 @@ The frontend is designed to integrate with a Django backend through the followin
 - `POST /api/leagues/:id/teams/` - Add team to league
 
 ### Schedule
+
 - `GET /api/schedule/` - Get all scheduled games
 - `POST /api/schedule/generate/` - Generate schedule for a league
 - `GET /api/games/:id/` - Get game details
 - `PUT /api/games/:id/` - Update game (score, status)
 
 ### Analytics
+
 - `GET /api/analytics/teams/:id/` - Get team analytics
 - `GET /api/analytics/leagues/:id/` - Get league analytics
 - `GET /api/analytics/players/:id/` - Get player analytics
 
 ### Community
+
 - `GET /api/posts/` - Get community posts
 - `POST /api/posts/` - Create a post
 - `GET /api/posts/:id/comments/` - Get comments on a post
@@ -153,7 +159,7 @@ The frontend is designed to integrate with a Django backend through the followin
 1. Create a virtual environment:
    \`\`\`bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   source venv/bin/activate # On Windows: venv\Scripts\activate
    \`\`\`
 
 2. Install dependencies:
@@ -201,6 +207,7 @@ The frontend is designed to integrate with a Django backend through the followin
 ## API Documentation
 
 Once the backend is implemented, API documentation will be available at:
+
 - Swagger UI: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 - ReDoc: [http://localhost:8000/api/redoc/](http://localhost:8000/api/redoc/)
 
@@ -251,23 +258,5 @@ Detailed deployment instructions will be added once the backend is implemented.
 
 ## Contributors
 
-- Rashed - Software  Engineer
+- Rashed - Software Engineer
 - (Rashed) - Backend Developer
-\`\`\`
-
-```python file="backend/requirements.txt"
-Django==4.2.7
-djangorestframework==3.14.0
-django-cors-headers==4.3.0
-psycopg2-binary==2.9.9
-dj-database-url==2.1.0
-python-dotenv==1.0.0
-gunicorn==21.2.0
-whitenoise==6.5.0
-Pillow==10.1.0
-django-filter==23.3
-djangorestframework-simplejwt==5.3.0
-drf-yasg==1.21.7
-celery==5.3.4
-redis==5.0.1
-django-storages==1.14.2
