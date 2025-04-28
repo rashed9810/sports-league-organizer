@@ -1,0 +1,77 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "jsmith",
+      "email": "jsmith@example.com",
+      "first_name": "John",
+      "last_name": "Smith",
+      "date_joined": "2023-01-10T08:30:00Z",
+      "is_active": true,
+      "profile": {
+        "avatar": "/images/avatars/jsmith.png",
+        "bio": "Basketball player for Thunder Eagles",
+        "phone": "+1234567890",
+        "address": "123 Main St, Anytown, USA",
+        "date_of_birth": "1995-05-15"
+      },
+      "roles": ["player"],
+      "teams": [
+        {
+          "id": 1,
+          "name": "Thunder Eagles",
+          "role": "player",
+          "jersey_number": 7
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "username": "mjohnson",
+      "email": "mjohnson@example.com",
+      "first_name": "Michael",
+      "last_name": "Johnson",
+      "date_joined": "2023-01-05T10:15:00Z",
+      "is_active": true,
+      "profile": {
+        "avatar": "/images/avatars/mjohnson.png",
+        "bio": "Coach for Thunder Eagles",
+        "phone": "+1987654321",
+        "address": "456 Oak St, Anytown, USA",
+        "date_of_birth": "1985-08-22"
+      },
+      "roles": ["coach"],
+      "teams": [
+        {
+          "id": 1,
+          "name": "Thunder Eagles",
+          "role": "coach"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "username": "arodriguez",
+      "email": "arodriguez@example.com",
+      "first_name": "Alex",
+      "last_name": "Rodriguez",
+      "date_joined": "2022-12-15T09:45:00Z",
+      "is_active": true,
+      "profile": {
+        "avatar": "/images/avatars/arodriguez.png",
+        "bio": "League organizer for Downtown Basketball League",
+        "phone": "+1122334455",
+        "address": "789 Pine St, Anytown, USA",
+        "date_of_birth": "1980-03-10"
+      },
+      "roles": ["organizer"],
+      "leagues": [
+        {
+          "id": 1,
+          "name": "Downtown Basketball League",
+          "role": "organizer"
+        }
+      ]
+    }
+  ]
+}

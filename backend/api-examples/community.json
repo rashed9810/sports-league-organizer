@@ -1,0 +1,70 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "author": {
+        "id": 15,
+        "name": "John Smith",
+        "username": "jsmith",
+        "avatar": "/images/avatars/jsmith.png",
+        "team": "Thunder Eagles"
+      },
+      "content": "Great game yesterday! Our team showed amazing teamwork in the second half. Special shoutout to @mwilliams for those clutch three-pointers! #ThunderEagles #Basketball",
+      "created_at": "2023-07-14T15:30:00Z",
+      "likes_count": 24,
+      "comments_count": 8,
+      "shares_count": 3,
+      "images": [
+        {
+          "id": 1,
+          "url": "/images/posts/game-highlight.jpg",
+          "alt": "Game highlight"
+        }
+      ],
+      "comments": [
+        {
+          "id": 1,
+          "author": {
+            "id": 22,
+            "name": "Maria Garcia",
+            "username": "mgarcia",
+            "avatar": "/images/avatars/mgarcia.png"
+          },
+          "content": "Amazing game! The teamwork was incredible.",
+          "created_at": "2023-07-14T16:15:00Z",
+          "likes_count": 5
+        },
+        {
+          "id": 2,
+          "author": {
+            "id": 28,
+            "name": "Michael Williams",
+            "username": "mwilliams",
+            "avatar": "/images/avatars/mwilliams.png",
+            "team": "Thunder Eagles"
+          },
+          "content": "Thanks for the shoutout! Just doing my part for the team.",
+          "created_at": "2023-07-14T17:05:00Z",
+          "likes_count": 8
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "author": {
+        "id": 18,
+        "name": "Sarah Thompson",
+        "username": "sthompson",
+        "avatar": "/images/avatars/sthompson.png",
+        "team": "Lightning Sharks"
+      },
+      "content": "Registration for the summer youth camp is now open! We're looking forward to meeting the next generation of soccer stars. Sign up through the link below. #YouthSoccer #SummerCamp",
+      "created_at": "2023-07-14T12:45:00Z",
+      "likes_count": 42,
+      "comments_count": 12,
+      "shares_count": 15,
+      "images": [],
+      "comments": []
+    }
+  ]
+}

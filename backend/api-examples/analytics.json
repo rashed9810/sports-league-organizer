@@ -1,0 +1,90 @@
+{
+  "team_analytics": {
+    "team_id": 1,
+    "team_name": "Thunder Eagles",
+    "sport": "Basketball",
+    "performance": {
+      "wins": 12,
+      "losses": 4,
+      "win_percentage": 0.75,
+      "points_scored": 864,
+      "points_allowed": 720,
+      "point_differential": 144
+    },
+    "shooting": {
+      "field_goals_made": 320,
+      "field_goals_attempted": 720,
+      "field_goal_percentage": 0.444,
+      "three_pointers_made": 96,
+      "three_pointers_attempted": 240,
+      "three_point_percentage": 0.4,
+      "free_throws_made": 128,
+      "free_throws_attempted": 180,
+      "free_throw_percentage": 0.711
+    },
+    "other_stats": {
+      "rebounds": 384,
+      "assists": 192,
+      "steals": 64,
+      "blocks": 48,
+      "turnovers": 96
+    },
+    "trends": {
+      "last_5_games": [
+        {
+          "opponent": "Forest Wolves",
+          "result": "W",
+          "score": "78-72"
+        },
+        {
+          "opponent": "Mountain Lions",
+          "result": "W",
+          "score": "82-65"
+        },
+        {
+          "opponent": "River Rapids",
+          "result": "L",
+          "score": "68-74"
+        },
+        {
+          "opponent": "Desert Scorpions",
+          "result": "W",
+          "score": "92-80"
+        },
+        {
+          "opponent": "Lightning Sharks",
+          "result": "W",
+          "score": "85-79"
+        }
+      ],
+      "scoring_by_quarter": {
+        "q1": 216,
+        "q2": 192,
+        "q3": 240,
+        "q4": 216
+      }
+    },
+    "player_stats": [
+      {
+        "player_id": 23,
+        "name": "John Smith",
+        "games_played": 16,
+        "points_per_game": 18.5,
+        "rebounds_per_game": 4.2,
+        "assists_per_game": 3.8,
+        "field_goal_percentage": 0.465,
+        "three_point_percentage": 0.42
+      },
+      {
+        "player_id": 24,
+        "name": "Sarah Thompson",
+        "games_played": 16,
+        "points_per_game": 15.2,
+        "rebounds_per_game": 2.8,
+        "assists_per_game": 6.5,
+        "field_goal_percentage": 0.438,
+        "three_point_percentage": 0.385
+      }
+    ]
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "teams": [
+    {
+      "id": 1,
+      "name": "Thunder Eagles",
+      "sport": "Basketball",
+      "created_at": "2023-01-15T10:30:00Z",
+      "logo_url": "/images/teams/thunder-eagles.png",
+      "members_count": 12,
+      "wins": 12,
+      "losses": 4,
+      "league": {
+        "id": 1,
+        "name": "Downtown Basketball League"
+      },
+      "coach": {
+        "id": 5,
+        "name": "Michael Johnson",
+        "email": "mjohnson@example.com"
+      },
+      "players": [
+        {
+          "id": 23,
+          "name": "John Smith",
+          "position": "Forward",
+          "jersey_number": 7
+        },
+        {
+          "id": 24,
+          "name": "Sarah Thompson",
+          "position": "Guard",
+          "jersey_number": 12
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Lightning Sharks",
+      "sport": "Soccer",
+      "created_at": "2023-02-10T14:15:00Z",
+      "logo_url": "/images/teams/lightning-sharks.png",
+      "members_count": 18,
+      "wins": 10,
+      "losses": 6,
+      "league": {
+        "id": 2,
+        "name": "City Soccer Championship"
+      },
+      "coach": {
+        "id": 8,
+        "name": "David Williams",
+        "email": "dwilliams@example.com"
+      },
+      "players": [
+        {
+          "id": 45,
+          "name": "Maria Garcia",
+          "position": "Midfielder",
+          "jersey_number": 10
+        },
+        {
+          "id": 46,
+          "name": "Robert Chen",
+          "position": "Goalkeeper",
+          "jersey_number": 1
+        }
+      ]
+    }
+  ]
+}

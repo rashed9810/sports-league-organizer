@@ -1,0 +1,86 @@
+{
+  "games": [
+    {
+      "id": 1,
+      "league": {
+        "id": 1,
+        "name": "Downtown Basketball League"
+      },
+      "home_team": {
+        "id": 1,
+        "name": "Thunder Eagles"
+      },
+      "away_team": {
+        "id": 6,
+        "name": "Forest Wolves"
+      },
+      "date": "2023-07-15",
+      "time": "18:00:00",
+      "location": "Central Park Court",
+      "status": "Upcoming",
+      "officials": [
+        {
+          "id": 12,
+          "name": "James Peterson",
+          "role": "Referee"
+        },
+        {
+          "id": 13,
+          "name": "Lisa Kim",
+          "role": "Scorekeeper"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "league": {
+        "id": 1,
+        "name": "Downtown Basketball League"
+      },
+      "home_team": {
+        "id": 3,
+        "name": "Mountain Lions"
+      },
+      "away_team": {
+        "id": 5,
+        "name": "Desert Scorpions"
+      },
+      "date": "2023-07-10",
+      "time": "15:00:00",
+      "location": "Diamond Stadium",
+      "status": "Completed",
+      "score": {
+        "home": 5,
+        "away": 3
+      },
+      "officials": [
+        {
+          "id": 12,
+          "name": "James Peterson",
+          "role": "Referee"
+        },
+        {
+          "id": 14,
+          "name": "Tom Jackson",
+          "role": "Scorekeeper"
+        }
+      ],
+      "statistics": {
+        "attendance": 124,
+        "duration": "1:45:00",
+        "highlights": [
+          {
+            "time": "00:15:30",
+            "description": "John Smith scores a three-pointer",
+            "player_id": 23
+          },
+          {
+            "time": "00:32:15",
+            "description": "Sarah Thompson with an assist to David Johnson",
+            "player_id": 24
+          }
+        ]
+      }
+    }
+  ]
+}

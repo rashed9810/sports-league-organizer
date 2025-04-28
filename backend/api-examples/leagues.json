@@ -1,0 +1,57 @@
+{
+  "leagues": [
+    {
+      "id": 1,
+      "name": "Downtown Basketball League",
+      "sport": "Basketball",
+      "season": "Summer 2023",
+      "start_date": "2023-06-15",
+      "end_date": "2023-08-30",
+      "status": "Active",
+      "teams_count": 8,
+      "games_count": 28,
+      "completed_games": 16,
+      "organizer": {
+        "id": 3,
+        "name": "Alex Rodriguez",
+        "email": "arodriguez@example.com"
+      },
+      "standings": [
+        {
+          "team_id": 1,
+          "team_name": "Thunder Eagles",
+          "wins": 12,
+          "losses": 4,
+          "points": 36,
+          "points_against": 24
+        },
+        {
+          "team_id": 6,
+          "team_name": "Forest Wolves",
+          "wins": 10,
+          "losses": 6,
+          "points": 30,
+          "points_against": 28
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "City Soccer Championship",
+      "sport": "Soccer",
+      "season": "Fall 2023",
+      "start_date": "2023-09-10",
+      "end_date": "2023-11-25",
+      "status": "Registration",
+      "teams_count": 12,
+      "games_count": 0,
+      "completed_games": 0,
+      "organizer": {
+        "id": 4,
+        "name": "Emma Wilson",
+        "email": "ewilson@example.com"
+      },
+      "standings": []
+    }
+  ]
+}
