@@ -6,34 +6,55 @@ A comprehensive web application for managing local sports leagues, teams, schedu
 
 ## Project Overview
 
-The Local Sports League Organizer is a full-stack application built with Next.js (frontend) and Django/PostgreSQL (backend). It provides tools for sports league administrators, team managers, players, and fans to organize and participate in local sports leagues.
+The Local Sports League Organizer is a full-stack application built with Next.js 14 (frontend) and Django/PostgreSQL (backend). It provides tools for sports league administrators, team managers, players, and fans to organize and participate in local sports leagues.
+
+This platform offers a complete solution for managing sports leagues of any size, from small local recreational leagues to larger competitive organizations. With features like team management, league scheduling, player statistics, and community engagement, it streamlines the administrative tasks while enhancing the experience for all participants.
 
 ## Features
 
 ### Implemented Frontend Features
 
-- ✅ Responsive design with mobile, tablet, and desktop layouts
-- ✅ Light, Dark, Dim, and Lights Out theme options
-- ✅ User authentication UI (login/registration)
-- ✅ Team management interface
-- ✅ League management interface
-- ✅ Schedule viewing and management
-- ✅ Analytics dashboard with visualizations
-- ✅ AI-powered team insights
-- ✅ Community and social features
-- ✅ Mobile app integration page
+- ✅ **Fully responsive design** optimized for mobile, tablet, and desktop layouts
+- ✅ Multiple theme options: Light, Dark, Dim, and Lights Out
+- ✅ User authentication system with login and registration
+- ✅ Comprehensive team management interface
+  - Create and edit teams
+  - Manage team rosters
+  - Track team statistics
+- ✅ League management system
+  - Create and configure leagues
+  - Add/remove teams
+  - Generate schedules
+  - Track standings
+- ✅ Interactive schedule viewing and management
+- ✅ Analytics dashboard with data visualizations
+- ✅ AI-powered team insights and performance analysis
+- ✅ Community and social features for player engagement
+- ✅ Mobile app integration and companion app information
 
 ### Backend Requirements (To Be Implemented)
 
-- 🔲 User authentication and authorization
-- 🔲 Team CRUD operations
-- 🔲 League CRUD operations
+- 🔲 User authentication and authorization with JWT
+- 🔲 Team management API
+  - CRUD operations for teams
+  - Player roster management
+  - Team statistics tracking
+- 🔲 League management API
+  - CRUD operations for leagues
+  - Team enrollment and management
+  - Standings calculation
 - 🔲 Schedule generation and management
-- 🔲 Player statistics tracking
-- 🔲 Game results and scoring
-- 🔲 Analytics data processing
-- 🔲 Community features (posts, comments)
-- 🔲 API endpoints for mobile app
+  - Automatic schedule creation
+  - Game rescheduling
+  - Conflict detection
+- 🔲 Player statistics tracking and performance metrics
+- 🔲 Game results and scoring system
+- 🔲 Analytics data processing and visualization endpoints
+- 🔲 Community features
+  - Posts and announcements
+  - Comments and discussions
+  - User notifications
+- 🔲 RESTful API endpoints for mobile app integration
 
 ## Project Structure
 
@@ -200,9 +221,16 @@ The frontend is designed to integrate with a Django backend through the followin
 
 - Use the existing component structure and styling patterns
 - Follow the shadcn/ui component library patterns
-- Maintain responsive design for all new components
+- **Ensure mobile responsiveness for all components**
+  - Test on various screen sizes (mobile, tablet, desktop)
+  - Use responsive design principles (fluid layouts, flexible images)
+  - Implement mobile-specific UI patterns when appropriate
 - Support all theme modes (light, dark, dim, lights-out)
-- Use Server Components where possible, Client Components when necessary
+- Use React Server Components where possible, Client Components when necessary
+- Follow Next.js 14 best practices
+  - Use the App Router
+  - Properly handle params with React.use()
+  - Implement proper error boundaries
 
 ### Backend Development
 
@@ -262,11 +290,55 @@ The Django backend can be deployed to various platforms:
 
 Detailed deployment instructions will be added once the backend is implemented.
 
+## Browser Compatibility & Mobile Responsiveness
+
+The Sports League Organizer is designed to work seamlessly across all modern browsers and devices:
+
+### Desktop Browsers
+
+- Chrome (latest 2 versions)
+- Firefox (latest 2 versions)
+- Safari (latest 2 versions)
+- Edge (latest 2 versions)
+
+### Mobile Browsers
+
+- iOS Safari
+- Android Chrome
+- Samsung Internet
+
+### Responsive Design
+
+The application implements a mobile-first responsive design approach:
+
+- Fluid layouts that adapt to any screen size
+- Touch-friendly UI elements for mobile users
+- Optimized navigation for smaller screens
+- Responsive tables and data visualizations
+- Appropriate font sizes and spacing for all devices
+
 ## License
 
 [MIT License](LICENSE)
 
+## Recent Updates
+
+### Version 1.1.0 (Current)
+
+- Enhanced mobile responsiveness across all components
+- Fixed build errors in team and league management pages
+- Updated params handling to use React.use() for Next.js 14 compatibility
+- Improved UI/UX for team and league management interfaces
+- Added comprehensive documentation
+
+### Version 1.0.0
+
+- Initial release with core functionality
+- Basic team and league management
+- User authentication UI
+- Analytics dashboard
+
 ## Contributors
 
-- Rashed - Software Engineer
-- (Rashed) - Backend Developer
+- Rashed - Lead Developer & Project Maintainer
+- Augment AI - Technical Contributor (Mobile Responsiveness & Bug Fixes)
