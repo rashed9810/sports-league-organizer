@@ -52,17 +52,11 @@ import {
 } from "@/components/ui/alert-dialog";
 import {
   Calendar as CalendarIcon,
-  Trophy,
-  Calendar,
-  Users,
-  MapPin,
-  Clock,
   ArrowLeft,
   Edit,
   Plus,
   Trash2,
   Save,
-  RefreshCw,
   UserPlus,
   CalendarDays,
 } from "lucide-react";
@@ -228,7 +222,6 @@ export default function LeagueManagePage({
   const [endDate, setEndDate] = useState<Date | undefined>(
     new Date(league.endDate)
   );
-  const [editingGame, setEditingGame] = useState<any>(null);
 
   const handleSaveLeague = () => {
     // In a real app, this would save to your backend
@@ -279,7 +272,6 @@ export default function LeagueManagePage({
   const handleUpdateGame = (game: any) => {
     // In a real app, this would call your backend API
     setGamesList(gamesList.map((g) => (g.id === game.id ? game : g)));
-    setEditingGame(null);
   };
 
   return (

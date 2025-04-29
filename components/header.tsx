@@ -6,7 +6,13 @@ import { Trophy, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 export default function Header() {
   const pathname = usePathname();
@@ -65,6 +71,9 @@ export default function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-[250px] sm:w-[300px]">
+              <SheetTitle>
+                <VisuallyHidden>Navigation Menu</VisuallyHidden>
+              </SheetTitle>
               <div className="flex flex-col h-full">
                 <div className="flex items-center justify-between mb-6">
                   <Link

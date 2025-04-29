@@ -1,0 +1,9 @@
+@echo off
+echo Adding all modified files...
+git add .
+echo Committing changes...
+git commit -m "Fix accessibility issues and implement team logo upload functionality"
+echo Pushing to GitHub...
+git push origin master
+echo Done!
+pause

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { use } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArrowLeft, Save, UserPlus, Trash2, Upload } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 import {
   Card,
   CardContent,
@@ -112,20 +113,43 @@ export default function TeamEditPage({
     position: "",
     jerseyNumber: "",
   });
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSaveTeam = () => {
+    // In a real app, this would save to your backend
     console.log("Saving team:", team);
-    alert("Team details saved successfully!");
+
+    // Show success message with toast
+    toast.success("Team details saved successfully!");
   };
 
   const handleAddPlayer = () => {
-    if (!selectedUser) return;
+    if (!selectedUser) {
+      toast.warning("Please select a user");
+      return;
+    }
+
+    if (!newPlayerData.position) {
+      toast.warning("Please enter a position");
+      return;
+    }
+
+    if (!newPlayerData.jerseyNumber) {
+      toast.warning("Please enter a jersey number");
+      return;
+    }
 
     const userToAdd = availableUsers.find(
       (user) => user.id.toString() === selectedUser
     );
-    if (!userToAdd) return;
 
+    if (!userToAdd) {
+      toast.error("Selected user not found");
+      return;
+    }
+
+    // In a real app, this would call your backend API
     setTeamPlayers([
       ...teamPlayers,
       {
@@ -143,10 +167,58 @@ export default function TeamEditPage({
       position: "",
       jerseyNumber: "",
     });
+
+    toast.success(`${userToAdd.name} added to the team`);
   };
 
   const handleRemovePlayer = (playerId: number) => {
+    const playerToRemove = teamPlayers.find((player) => player.id === playerId);
+    if (!playerToRemove) return;
+
+    // In a real app, this would call your backend API
     setTeamPlayers(teamPlayers.filter((player) => player.id !== playerId));
+
+    // Show success message
+    toast.success(`${playerToRemove.name} removed from the team`);
+  };
+
+  const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (max 2MB)
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File size exceeds 2MB limit");
+      return;
+    }
+
+    // Check file type
+    if (!file.type.startsWith("image/")) {
+      toast.error("Only image files are allowed");
+      return;
+    }
+
+    setIsUploading(true);
+
+    // In a real app, you would upload to your backend/cloud storage
+    // For now, we'll use a local URL
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      if (event.target?.result) {
+        // Update team with new logo
+        setTeam({
+          ...team,
+          logo: event.target.result as string,
+        });
+        setIsUploading(false);
+        toast.success("Logo uploaded successfully");
+      }
+    };
+    reader.onerror = () => {
+      setIsUploading(false);
+      toast.error("Error uploading logo");
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -252,9 +324,29 @@ export default function TeamEditPage({
                 <AvatarImage src={team.logo} alt={team.name} />
                 <AvatarFallback>{team.name.substring(0, 2)}</AvatarFallback>
               </Avatar>
-              <Button variant="outline">
-                <Upload className="mr-2 h-4 w-4" />
-                Upload Logo
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                ref={fileInputRef}
+                onChange={handleLogoUpload}
+              />
+              <Button
+                variant="outline"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+              >
+                {isUploading ? (
+                  <div className="flex items-center">
+                    <div className="animate-spin mr-2 h-4 w-4 border-2 border-current border-t-transparent rounded-full"></div>
+                    Uploading...
+                  </div>
+                ) : (
+                  <>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Logo
+                  </>
+                )}
               </Button>
               <p className="text-xs text-muted-foreground mt-2">
                 Recommended size: 512x512px. Max file size: 2MB.
