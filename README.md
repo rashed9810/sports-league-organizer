@@ -341,4 +341,4 @@ The application implements a mobile-first responsive design approach:
 ## Contributors
 
 - Rashed - Lead Developer & Project Maintainer
-- Augment AI - Technical Contributor (Mobile Responsiveness & Bug Fixes)
+
