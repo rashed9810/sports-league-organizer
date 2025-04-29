@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Push Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .step {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Instructions to Push Changes to GitHub</h1>
+    
+    <div class="step">
+        <h2>Step 1: Open Command Prompt or PowerShell</h2>
+        <p>Open a command prompt or PowerShell window in your project directory:</p>
+        <p><code>E:\Full- Stack -Django-Project\sports-league-organizer</code></p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 2: Add Changes</h2>
+        <p>Add all modified files to the staging area:</p>
+        <pre>git add .</pre>
+    </div>
+    
+    <div class="step">
+        <h2>Step 3: Commit Changes</h2>
+        <p>Commit the changes with a descriptive message:</p>
+        <pre>git commit -m "Fix accessibility issues and implement team logo upload functionality"</pre>
+    </div>
+    
+    <div class="step">
+        <h2>Step 4: Push to GitHub</h2>
+        <p>Push the changes to your GitHub repository:</p>
+        <pre>git push origin master</pre>
+    </div>
+    
+    <div class="step">
+        <h2>If You Encounter Issues</h2>
+        <p>If you encounter any issues with pushing, try the following:</p>
+        <ol>
+            <li>
+                <p>If there are conflicts, pull the changes first and then push:</p>
+                <pre>git pull --rebase origin master
+git push origin master</pre>
+            </li>
+            <li>
+                <p>If you're prompted for credentials, enter your GitHub username and personal access token (not your password).</p>
+            </li>
+            <li>
+                <p>If you need to force push (use with caution):</p>
+                <pre>git push -f origin master</pre>
+            </li>
+        </ol>
+    </div>
+</body>
+</html>

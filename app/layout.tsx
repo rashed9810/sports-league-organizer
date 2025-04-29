@@ -1,11 +1,22 @@
 import type React from "react";
 import "@/app/globals.css";
-import { Inter } from "next/font/google";
+import { Outfit, Montserrat } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
-import { Toaster } from "@/components/ui/use-toast";
+import Footer from "@/components/footer";
+import { Toaster } from "@/components/ui/toaster";
 
-const inter = Inter({ subsets: ["latin"] });
+// Primary font for headings
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+});
+
+// Secondary font for body text
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
 
 export const metadata = {
   title: "Local Sports League Organizer",
@@ -20,15 +31,21 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className} suppressHydrationWarning>
+      <body
+        className={`${outfit.variable} ${montserrat.variable} font-sans`}
+        suppressHydrationWarning
+      >
         <ThemeProvider
           attribute="data-theme"
           defaultTheme="system"
           enableSystem
         >
-          <Header />
-          {children}
-          <Toaster />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </div>
         </ThemeProvider>
       </body>
     </html>

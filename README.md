@@ -226,6 +226,11 @@ The frontend is designed to integrate with a Django backend through the followin
   - Use responsive design principles (fluid layouts, flexible images)
   - Implement mobile-specific UI patterns when appropriate
 - Support all theme modes (light, dark, dim, lights-out)
+- **Use the toast notification system properly**
+  - Import from `@/hooks/use-toast` and use the `useToast` hook
+  - Use appropriate variants: `default`, `destructive`, or `success`
+  - Position notifications in the center for better visibility
+  - Keep messages concise and informative
 - Use React Server Components where possible, Client Components when necessary
 - Follow Next.js 14 best practices
   - Use the App Router
@@ -323,7 +328,21 @@ The application implements a mobile-first responsive design approach:
 
 ## Recent Updates
 
-### Version 1.1.0 (Current)
+### Version 1.2.0 (Current)
+
+- Improved toast notification system for better user experience
+  - Repositioned toast notifications to appear in the center of the screen
+  - Added new success variant with improved styling
+  - Enhanced visibility and user feedback for all actions
+- Fixed mobile responsiveness issues in feature cards
+  - Optimized layout for small screens
+  - Improved spacing and sizing for better mobile experience
+  - Ensured consistent appearance across all themes
+- Fixed runtime error in league management page
+  - Resolved toast function implementation issue
+  - Updated toast imports to use the correct hooks
+
+### Version 1.1.0
 
 - Enhanced mobile responsiveness across all components
 - Fixed build errors in team and league management pages
@@ -341,4 +360,3 @@ The application implements a mobile-first responsive design approach:
 ## Contributors
 
 - Rashed - Lead Developer & Project Maintainer
-

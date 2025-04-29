@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { use } from "react";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 import {
   Card,
   CardContent,
@@ -211,6 +212,7 @@ export default function LeagueManagePage({
   params: Promise<{ id: string }>;
 }) {
   const resolvedParams = use(params);
+  const { toast } = useToast();
   const [league, setLeague] = useState({ ...leagueData });
   const [teamsList, setTeamsList] = useState([...teams]);
   const [gamesList, setGamesList] = useState([...games]);
@@ -224,19 +226,76 @@ export default function LeagueManagePage({
   );
 
   const handleSaveLeague = () => {
+    // Validate required fields
+    if (!league.name) {
+      toast({
+        title: "Validation Error",
+        description: "League name is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!league.sport) {
+      toast({
+        title: "Validation Error",
+        description: "Sport is required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      toast({
+        title: "Validation Error",
+        description: "Start and end dates are required",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (startDate > endDate) {
+      toast({
+        title: "Validation Error",
+        description: "Start date cannot be after end date",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // In a real app, this would save to your backend
     console.log("Saving league:", league);
+
     // Show success message
-    alert("League details saved successfully!");
+    toast({
+      title: "Success",
+      description: "League details saved successfully!",
+      variant: "success",
+    });
   };
 
   const handleAddTeam = () => {
-    if (!selectedTeam) return;
+    if (!selectedTeam) {
+      toast({
+        title: "Validation Error",
+        description: "Please select a team",
+        variant: "destructive",
+      });
+      return;
+    }
 
     const teamToAdd = availableTeams.find(
       (team) => team.id.toString() === selectedTeam
     );
-    if (!teamToAdd) return;
+
+    if (!teamToAdd) {
+      toast({
+        title: "Error",
+        description: "Selected team not found",
+        variant: "destructive",
+      });
+      return;
+    }
 
     // In a real app, this would call your backend API
     setTeamsList([
@@ -251,20 +310,49 @@ export default function LeagueManagePage({
     ]);
 
     setSelectedTeam("");
+    toast({
+      title: "Success",
+      description: `${teamToAdd.name} added to the league`,
+      variant: "success",
+    });
   };
 
   const handleRemoveTeam = (teamId: number) => {
+    const teamToRemove = teamsList.find((team) => team.id === teamId);
+    if (!teamToRemove) return;
+
     // In a real app, this would call your backend API
     setTeamsList(teamsList.filter((team) => team.id !== teamId));
+
+    // Show success message
+    toast({
+      title: "Success",
+      description: `${teamToRemove.name} removed from the league`,
+      variant: "success",
+    });
   };
 
   const handleGenerateSchedule = () => {
+    // Validate that we have at least 2 teams
+    if (teamsList.length < 2) {
+      toast({
+        title: "Validation Error",
+        description: "You need at least 2 teams to generate a schedule",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsGeneratingSchedule(true);
 
     // Simulate API call to generate schedule
     setTimeout(() => {
       // In a real app, this would call your backend API
-      alert("Schedule generated successfully!");
+      toast({
+        title: "Success",
+        description: "Schedule generated successfully!",
+        variant: "success",
+      });
       setIsGeneratingSchedule(false);
     }, 1500);
   };
@@ -272,6 +360,13 @@ export default function LeagueManagePage({
   const handleUpdateGame = (game: any) => {
     // In a real app, this would call your backend API
     setGamesList(gamesList.map((g) => (g.id === game.id ? game : g)));
+
+    // Show success message
+    toast({
+      title: "Success",
+      description: "Game details have been updated successfully",
+      variant: "success",
+    });
   };
 
   return (

@@ -26,37 +26,61 @@ export default function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/" className="flex items-center space-x-2">
-          <Trophy className="h-6 w-6" />
-          <span className="font-bold">Sports League</span>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 shadow-sm">
+      {/* Decorative top border */}
+      <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary/70 via-accent/70 to-primary/70"></div>
+
+      <div className="container flex h-16 items-center justify-between">
+        <Link href="/" className="flex items-center space-x-2 group">
+          <div className="relative">
+            <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative flex items-center justify-center rounded-full bg-background p-1.5">
+              <Trophy className="h-6 w-6 text-primary group-hover:text-accent transition-colors" />
+            </div>
+          </div>
+          <span className="font-bold text-lg bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent group-hover:from-accent group-hover:to-primary transition-all duration-300">
+            Sports League
+          </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex gap-6">
+        <nav className="hidden md:flex gap-8">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className={`text-sm font-medium ${
-                pathname === link.href ? "text-primary" : "text-foreground/60"
-              } transition-colors hover:text-foreground/80`}
+              className={`relative text-sm font-medium group ${
+                pathname === link.href ? "text-primary" : "text-foreground/70"
+              } transition-colors hover:text-primary`}
             >
               {link.label}
+              <span
+                className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-primary group-hover:w-full transition-all duration-300 ${
+                  pathname === link.href ? "w-full" : "w-0"
+                }`}
+              ></span>
             </Link>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden md:flex items-center gap-3">
           <ThemeSwitcher />
           <Link href="/login">
-            <Button variant="outline" size="sm">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-9 px-4 font-medium hover:bg-primary/10 hover:text-primary transition-all"
+            >
               Log in
             </Button>
           </Link>
           <Link href="/register">
-            <Button size="sm">Sign up</Button>
+            <Button
+              size="sm"
+              className="h-9 px-4 font-medium bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all"
+            >
+              Sign up
+            </Button>
           </Link>
         </div>
 
@@ -65,57 +89,88 @@ export default function Header() {
           <ThemeSwitcher />
           <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Menu className="h-5 w-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-full hover:bg-primary/10"
+              >
+                <Menu className="h-5 w-5 text-foreground/80 hover:text-primary transition-colors" />
                 <span className="sr-only">Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[250px] sm:w-[300px]">
+            <SheetContent
+              side="right"
+              className="w-[280px] sm:w-[320px] border-l border-border/50 bg-background/95 backdrop-blur-md"
+            >
               <SheetTitle>
                 <VisuallyHidden>Navigation Menu</VisuallyHidden>
               </SheetTitle>
               <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between mb-8">
                   <Link
                     href="/"
-                    className="flex items-center space-x-2"
+                    className="flex items-center space-x-2 group"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <Trophy className="h-6 w-6" />
-                    <span className="font-bold">Sports League</span>
+                    <div className="relative">
+                      <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-full blur-sm opacity-70 group-hover:opacity-100 transition-opacity"></div>
+                      <div className="relative flex items-center justify-center rounded-full bg-background p-1.5">
+                        <Trophy className="h-5 w-5 text-primary group-hover:text-accent transition-colors" />
+                      </div>
+                    </div>
+                    <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+                      Sports League
+                    </span>
                   </Link>
                   <Button
                     variant="ghost"
                     size="icon"
+                    className="rounded-full h-8 w-8 hover:bg-primary/10"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <X className="h-5 w-5" />
+                    <X className="h-4 w-4" />
                   </Button>
                 </div>
-                <nav className="flex flex-col gap-4">
-                  {navLinks.map((link) => (
+
+                {/* Mobile navigation links with animation */}
+                <nav className="flex flex-col gap-1">
+                  {navLinks.map((link, index) => (
                     <Link
                       key={link.href}
                       href={link.href}
-                      className={`text-sm font-medium py-2 ${
+                      className={`relative text-base font-medium py-3 px-2 rounded-md ${
                         pathname === link.href
-                          ? "text-primary"
-                          : "text-foreground/60"
-                      } transition-colors hover:text-foreground/80`}
+                          ? "text-primary bg-primary/5"
+                          : "text-foreground/70"
+                      } transition-all hover:text-primary hover:bg-primary/5`}
                       onClick={() => setIsMenuOpen(false)}
+                      style={{ animationDelay: `${index * 50}ms` }}
                     >
                       {link.label}
+                      {pathname === link.href && (
+                        <span className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full"></span>
+                      )}
                     </Link>
                   ))}
                 </nav>
-                <div className="mt-auto flex flex-col gap-2 pt-6">
+
+                {/* Divider with gradient */}
+                <div className="my-6 h-px w-full bg-gradient-to-r from-transparent via-border to-transparent"></div>
+
+                {/* Auth buttons */}
+                <div className="mt-auto flex flex-col gap-3 pt-4">
                   <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" className="w-full">
+                    <Button
+                      variant="outline"
+                      className="w-full h-10 border-primary/20 hover:border-primary hover:bg-primary/5"
+                    >
                       Log in
                     </Button>
                   </Link>
                   <Link href="/register" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full">Sign up</Button>
+                    <Button className="w-full h-10 bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all">
+                      Sign up
+                    </Button>
                   </Link>
                 </div>
               </div>
