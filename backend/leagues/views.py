@@ -5,11 +5,12 @@ from .models import League, Standing
 from .serializers import LeagueSerializer, LeagueDetailSerializer, StandingSerializer
 from .permissions import IsLeagueOrganizerOrReadOnly
 from teams.models import Team
+from teams.serializers import TeamSerializer
 
 class LeagueViewSet(viewsets.ModelViewSet):
     queryset = League.objects.all()
     serializer_class = LeagueSerializer
-    permission_classes = [permissions.IsAuthenticated, IsLeagueOrganizerOrReadOnly]
+    permission_classes = [IsLeagueOrganizerOrReadOnly]
     
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -81,19 +82,3 @@ class LeagueViewSet(viewsets.ModelViewSet):
             except Team.DoesNotExist:
                 return Response({"detail": "Team not found."}, status=status.HTTP_404_NOT_FOUND)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-```python file="backend/leagues/permissions.py"
-from rest_framework import permissions
-
-class IsLeagueOrganizerOrReadOnly(permissions.BasePermission):
-    """
-    Custom permission to only allow league organizers to edit.
-    """
-    
-    def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request
-        if request.method in permissions.SAFE_METHODS:
-            return True
-        
-        # Write permissions are only allowed to the league organizer
-        return obj.organizer == request.user

@@ -45,8 +45,12 @@ def create_users():
         if created:
             user.set_password('password123')
             user.save()
-            role = 'player' if i &lt;= 8 else 'coach'
-            Profile.objects.get_or_create(user=user, roles=[role])
+
+        role = 'player' if i <= 8 else 'coach'
+        profile, profile_created = Profile.objects.get_or_create(user=user)
+        if profile_created:
+            profile.roles = [role]
+            profile.save()
         users.append(user)
     
     return admin, users
@@ -184,7 +188,7 @@ def create_games(leagues, venues):
     
     for league in leagues:
         teams = list(league.teams.all())
-        if len(teams) &lt; 2:
+        if len(teams) < 2:
             continue
         
         # Create some games
@@ -200,7 +204,7 @@ def create_games(leagues, venues):
                 home_score = random.randint(60, 100)
                 away_score = random.randint(60, 100)
             elif league.status == 'active':
-                if i &lt; 3:  # Some completed games
+                if i < 3:  # Some completed games
                     game_date = datetime.now() - timedelta(days=random.randint(1, 15))
                     status = 'completed'
                     home_score = random.randint(60, 100)

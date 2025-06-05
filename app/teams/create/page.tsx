@@ -20,12 +20,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Upload } from "lucide-react";
+import { ArrowLeft, Upload, Users } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
+import { apiClient } from "@/lib/api";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function CreateTeamPage() {
   const router = useRouter();
+  const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
   const [teamData, setTeamData] = useState({
     name: "",
     sport: "",
@@ -34,6 +39,23 @@ export default function CreateTeamPage() {
     description: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="container py-10">
+        <div className="max-w-md mx-auto text-center">
+          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
+          <p className="text-muted-foreground mb-4">
+            You need to be logged in to create a team.
+          </p>
+          <Link href="/login">
+            <Button>Sign In</Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -46,26 +68,43 @@ export default function CreateTeamPage() {
     setTeamData({ ...teamData, [field]: value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
     // Validate form
     if (!teamData.name || !teamData.sport) {
-      alert("Please fill in all required fields");
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      });
       setIsSubmitting(false);
       return;
     }
 
-    // In a real app, this would call your backend API
-    console.log("Creating team:", teamData);
+    try {
+      const team = await apiClient.createTeam({
+        name: teamData.name.trim(),
+        sport: teamData.sport,
+      });
 
-    // Simulate API call
-    setTimeout(() => {
+      toast({
+        title: "Team Created",
+        description: `${team.name} has been created successfully!`,
+        variant: "default",
+      });
+
+      router.push(`/teams/${team.id}`);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create team",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-      // Redirect to teams page
-      router.push("/teams");
-    }, 1500);
+    }
   };
 
   return (

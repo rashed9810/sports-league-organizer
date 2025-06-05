@@ -7,15 +7,20 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar as CalendarIcon, ArrowLeft } from "lucide-react"
+import { Calendar as CalendarIcon, ArrowLeft, Trophy } from "lucide-react"
 import Link from "next/link"
 import { format } from "date-fns"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { useRouter } from "next/navigation"
+import { useToast } from "@/hooks/use-toast"
+import { apiClient } from "@/lib/api"
+import { useAuth } from "@/contexts/auth-context"
 
 export default function CreateLeaguePage() {
   const router = useRouter()
+  const { toast } = useToast()
+  const { isAuthenticated } = useAuth()
   const [leagueData, setLeagueData] = useState({
     name: "",
     sport: "",
@@ -27,6 +32,23 @@ export default function CreateLeaguePage() {
   const [endDate, setEndDate] = useState<Date | undefined>()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
+  if (!isAuthenticated) {
+    return (
+      <div className="container py-10">
+        <div className="max-w-md mx-auto text-center">
+          <Trophy className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Authentication Required</h3>
+          <p className="text-muted-foreground mb-4">
+            You need to be logged in to create a league.
+          </p>
+          <Link href="/login">
+            <Button>Sign In</Button>
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { id, value } = e.target
     setLeagueData({ ...leagueData, [id]: value })
@@ -36,30 +58,56 @@ export default function CreateLeaguePage() {
     setLeagueData({ ...leagueData, [field]: value })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     // Validate form
     if (!leagueData.name || !leagueData.sport || !startDate || !endDate) {
-      alert("Please fill in all required fields")
+      toast({
+        title: "Validation Error",
+        description: "Please fill in all required fields",
+        variant: "destructive",
+      })
       setIsSubmitting(false)
       return
     }
 
-    // In a real app, this would call your backend API
-    console.log("Creating league:", {
-      ...leagueData,
-      startDate: startDate?.toISOString().split("T")[0],
-      endDate: endDate?.toISOString().split("T")[0],
-    })
-
-    // Simulate API call
-    setTimeout(() => {
+    if (endDate <= startDate) {
+      toast({
+        title: "Validation Error",
+        description: "End date must be after start date",
+        variant: "destructive",
+      })
       setIsSubmitting(false)
-      // Redirect to leagues page
-      router.push("/leagues")
-    }, 1500)
+      return
+    }
+
+    try {
+      const league = await apiClient.createLeague({
+        name: leagueData.name.trim(),
+        sport: leagueData.sport,
+        season: leagueData.season || `${startDate.getFullYear()}`,
+        start_date: startDate.toISOString().split("T")[0],
+        end_date: endDate.toISOString().split("T")[0],
+      })
+
+      toast({
+        title: "League Created",
+        description: `${league.name} has been created successfully!`,
+        variant: "default",
+      })
+
+      router.push(`/leagues/${league.id}`)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to create league",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (

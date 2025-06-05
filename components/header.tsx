@@ -2,21 +2,31 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Trophy, Menu, X } from "lucide-react";
+import { Trophy, Menu, X, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { useAuth } from "@/contexts/auth-context";
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { VisuallyHidden } from "@/components/ui/visually-hidden";
 
 export default function Header() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, logout, isAuthenticated } = useAuth();
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -65,23 +75,52 @@ export default function Header() {
 
         <div className="hidden md:flex items-center gap-3">
           <ThemeSwitcher />
-          <Link href="/login">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-9 px-4 font-medium hover:bg-primary/10 hover:text-primary transition-all"
-            >
-              Log in
-            </Button>
-          </Link>
-          <Link href="/register">
-            <Button
-              size="sm"
-              className="h-9 px-4 font-medium bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all"
-            >
-              Sign up
-            </Button>
-          </Link>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-3 font-medium hover:bg-primary/10 hover:text-primary transition-all"
+                >
+                  <User className="h-4 w-4 mr-2" />
+                  {user?.first_name || user?.username}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  {user?.first_name && user?.last_name
+                    ? `${user.first_name} ${user.last_name}`
+                    : user?.username}
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 px-4 font-medium hover:bg-primary/10 hover:text-primary transition-all"
+                >
+                  Log in
+                </Button>
+              </Link>
+              <Link href="/register">
+                <Button
+                  size="sm"
+                  className="h-9 px-4 font-medium bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all"
+                >
+                  Sign up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Navigation */}
@@ -159,19 +198,40 @@ export default function Header() {
 
                 {/* Auth buttons */}
                 <div className="mt-auto flex flex-col gap-3 pt-4">
-                  <Link href="/login" onClick={() => setIsMenuOpen(false)}>
-                    <Button
-                      variant="outline"
-                      className="w-full h-10 border-primary/20 hover:border-primary hover:bg-primary/5"
-                    >
-                      Log in
-                    </Button>
-                  </Link>
-                  <Link href="/register" onClick={() => setIsMenuOpen(false)}>
-                    <Button className="w-full h-10 bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all">
-                      Sign up
-                    </Button>
-                  </Link>
+                  {isAuthenticated ? (
+                    <div className="space-y-3">
+                      <div className="text-sm text-muted-foreground">
+                        Signed in as {user?.first_name || user?.username}
+                      </div>
+                      <Button
+                        variant="outline"
+                        className="w-full h-10 border-destructive/20 hover:border-destructive hover:bg-destructive/5 hover:text-destructive"
+                        onClick={() => {
+                          logout();
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Log out
+                      </Button>
+                    </div>
+                  ) : (
+                    <>
+                      <Link href="/login" onClick={() => setIsMenuOpen(false)}>
+                        <Button
+                          variant="outline"
+                          className="w-full h-10 border-primary/20 hover:border-primary hover:bg-primary/5"
+                        >
+                          Log in
+                        </Button>
+                      </Link>
+                      <Link href="/register" onClick={() => setIsMenuOpen(false)}>
+                        <Button className="w-full h-10 bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all">
+                          Sign up
+                        </Button>
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </SheetContent>

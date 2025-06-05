@@ -1,10 +1,16 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { MessageSquare, ThumbsUp, Share2, Calendar, Users, Trophy } from "lucide-react"
+import { MessageSquare, ThumbsUp, Share2, Calendar, Users, Trophy, Loader2, Plus } from "lucide-react"
+import { apiClient, Post, Team } from "@/lib/api"
+import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/hooks/use-toast"
 
 // This would come from your API in a real application
 const posts = [
@@ -89,6 +95,69 @@ const events = [
 ]
 
 export default function CommunityPage() {
+  const [posts, setPosts] = useState<Post[]>([])
+  const [teams, setTeams] = useState<Team[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { isAuthenticated } = useAuth()
+  const { toast } = useToast()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [postsData, teamsData] = await Promise.all([
+          apiClient.getPosts(),
+          apiClient.getTeams()
+        ])
+        setPosts(postsData)
+        setTeams(teamsData)
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load community data",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [toast])
+
+  const handleLikePost = async (postId: number) => {
+    if (!isAuthenticated) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to like posts",
+        variant: "destructive",
+      })
+      return
+    }
+
+    try {
+      await apiClient.likePost(postId)
+      // Refresh posts to get updated like count
+      const updatedPosts = await apiClient.getPosts()
+      setPosts(updatedPosts)
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to like post",
+        variant: "destructive",
+      })
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="container py-10">
+        <div className="flex items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin" />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container py-10">
       <div className="flex justify-between items-center mb-8">
@@ -96,9 +165,14 @@ export default function CommunityPage() {
           <h1 className="text-3xl font-bold tracking-tight">Community</h1>
           <p className="text-muted-foreground mt-1">Connect with players, teams, and fans</p>
         </div>
-        <Link href="/community/post">
-          <Button>Create Post</Button>
-        </Link>
+        {isAuthenticated && (
+          <Link href="/community/post">
+            <Button>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Post
+            </Button>
+          </Link>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -111,99 +185,127 @@ export default function CommunityPage() {
             </TabsList>
 
             <TabsContent value="feed" className="space-y-6">
-              {posts.map((post) => (
-                <Card key={post.id}>
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start gap-4">
-                      <Avatar>
-                        <AvatarImage src={post.author.avatar || "/placeholder.svg"} alt={post.author.name} />
-                        <AvatarFallback>{post.author.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <CardTitle className="text-base">{post.author.name}</CardTitle>
-                          {post.author.team && (
-                            <Badge variant="outline" className="text-xs">
-                              {post.author.team}
-                            </Badge>
-                          )}
+              {posts.length === 0 ? (
+                <div className="text-center py-12">
+                  <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No posts yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    {isAuthenticated
+                      ? "Be the first to share something with the community!"
+                      : "Sign in to view and create posts"}
+                  </p>
+                  {isAuthenticated && (
+                    <Link href="/community/post">
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create First Post
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                posts.map((post) => (
+                  <Card key={post.id}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-start gap-4">
+                        <Avatar>
+                          <AvatarImage src={post.author.profile?.avatar} alt={post.author.first_name} />
+                          <AvatarFallback>
+                            {post.author.first_name?.[0]}{post.author.last_name?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <CardTitle className="text-base">
+                              {post.author.first_name} {post.author.last_name}
+                            </CardTitle>
+                            {post.team && (
+                              <Badge variant="outline" className="text-xs">
+                                {post.team.name}
+                              </Badge>
+                            )}
+                          </div>
+                          <CardDescription>
+                            @{post.author.username} · {new Date(post.created_at).toLocaleDateString()}
+                          </CardDescription>
                         </div>
-                        <CardDescription>
-                          @{post.author.username} · {post.timestamp}
-                        </CardDescription>
                       </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="whitespace-pre-line">{post.content}</p>
-                    {post.images.length > 0 && (
-                      <div className="mt-4">
-                        {post.images.map((image, index) => (
-                          <img
-                            key={index}
-                            src={image || "/placeholder.svg"}
-                            alt="Post attachment"
-                            className="rounded-lg w-full object-cover mt-2"
-                          />
-                        ))}
+                    </CardHeader>
+                    <CardContent>
+                      <p className="whitespace-pre-line">{post.content}</p>
+                    </CardContent>
+                    <CardFooter className="border-t pt-4">
+                      <div className="flex justify-between w-full">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="flex items-center gap-1"
+                          onClick={() => handleLikePost(post.id)}
+                          disabled={!isAuthenticated}
+                        >
+                          <ThumbsUp className="h-4 w-4" />
+                          <span>{post.likes_count}</span>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                          <MessageSquare className="h-4 w-4" />
+                          <span>{post.comments_count}</span>
+                        </Button>
+                        <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                          <Share2 className="h-4 w-4" />
+                          <span>{post.shares_count}</span>
+                        </Button>
                       </div>
-                    )}
-                  </CardContent>
-                  <CardFooter className="border-t pt-4">
-                    <div className="flex justify-between w-full">
-                      <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                        <ThumbsUp className="h-4 w-4" />
-                        <span>{post.likes}</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                        <MessageSquare className="h-4 w-4" />
-                        <span>{post.comments}</span>
-                      </Button>
-                      <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                        <Share2 className="h-4 w-4" />
-                        <span>{post.shares}</span>
-                      </Button>
-                    </div>
-                  </CardFooter>
-                </Card>
-              ))}
+                    </CardFooter>
+                  </Card>
+                ))
+              )}
             </TabsContent>
 
             <TabsContent value="teams" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Thunder Eagles</CardTitle>
-                    <CardDescription>Basketball · 12 members</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Local basketball team competing in the Downtown Basketball League. Founded in 2018.
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      View Team Page
-                    </Button>
-                  </CardFooter>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Lightning Sharks</CardTitle>
-                    <CardDescription>Soccer · 18 members</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground">
-                      Community soccer team participating in the City Soccer Championship. Founded in 2015.
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Button variant="outline" className="w-full">
-                      View Team Page
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
+              {teams.length === 0 ? (
+                <div className="text-center py-12">
+                  <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">No teams yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    {isAuthenticated
+                      ? "Create the first team to get started!"
+                      : "Sign in to view and join teams"}
+                  </p>
+                  {isAuthenticated && (
+                    <Link href="/teams/create">
+                      <Button>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Team
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {teams.map((team) => (
+                    <Card key={team.id}>
+                      <CardHeader>
+                        <CardTitle>{team.name}</CardTitle>
+                        <CardDescription>{team.sport} · {team.members_count} members</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-muted-foreground">
+                          {team.coach && (
+                            <>Coach: {team.coach.first_name} {team.coach.last_name}</>
+                          )}
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Link href={`/teams/${team.id}`} className="w-full">
+                          <Button variant="outline" className="w-full">
+                            View Team Page
+                          </Button>
+                        </Link>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="events" className="space-y-6">

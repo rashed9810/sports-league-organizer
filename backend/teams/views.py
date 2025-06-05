@@ -8,7 +8,7 @@ from .permissions import IsTeamManagerOrReadOnly
 class TeamViewSet(viewsets.ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = [permissions.IsAuthenticated, IsTeamManagerOrReadOnly]
+    permission_classes = [IsTeamManagerOrReadOnly]
     
     def get_serializer_class(self):
         if self.action == 'retrieve':

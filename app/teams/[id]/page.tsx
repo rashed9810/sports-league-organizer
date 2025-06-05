@@ -1,6 +1,7 @@
 "use client";
 
-import { use } from "react";
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,7 +32,11 @@ import {
   Edit,
   BarChart,
   Sparkles,
+  Loader2,
 } from "lucide-react";
+import { apiClient, Team } from "@/lib/api";
+import { useAuth } from "@/contexts/auth-context";
+import { useToast } from "@/hooks/use-toast";
 
 // This would come from your API in a real application
 const teamData = {

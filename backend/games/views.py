@@ -12,12 +12,12 @@ from leagues.models import League, Standing
 class VenueViewSet(viewsets.ModelViewSet):
     queryset = Venue.objects.all()
     serializer_class = VenueSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = []
 
 class GameViewSet(viewsets.ModelViewSet):
     queryset = Game.objects.all()
     serializer_class = GameSerializer
-    permission_classes = [permissions.IsAuthenticated, IsLeagueOrganizerOrReadOnly]
+    permission_classes = [IsLeagueOrganizerOrReadOnly]
     
     def get_serializer_class(self):
         if self.action == 'retrieve':
@@ -115,7 +115,7 @@ class GameViewSet(viewsets.ModelViewSet):
             league = League.objects.get(id=league_id)
             teams = list(league.teams.all())
             
-            if len(teams) &lt; 2:
+            if len(teams) < 2:
                 return Response({"detail": "League must have at least 2 teams to generate a schedule."}, 
                                status=status.HTTP_400_BAD_REQUEST)
             

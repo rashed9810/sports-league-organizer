@@ -135,7 +135,7 @@ class TeamAnalyticsViewSet(viewsets.ModelViewSet):
         for game in home_games:
             if game.home_score > game.away_score:
                 wins += 1
-            elif game.home_score &lt; game.away_score:
+            elif game.home_score < game.away_score:
                 losses += 1
             else:
                 draws += 1
@@ -146,7 +146,7 @@ class TeamAnalyticsViewSet(viewsets.ModelViewSet):
         for game in away_games:
             if game.away_score > game.home_score:
                 wins += 1
-            elif game.away_score &lt; game.home_score:
+            elif game.away_score < game.home_score:
                 losses += 1
             else:
                 draws += 1
