@@ -11,4 +11,6 @@ class IsLeagueOrganizerOrReadOnly(permissions.BasePermission):
             return True
         
         # Write permissions are only allowed to the league organizer
+        if hasattr(obj, 'league'):
+            return obj.league.organizer == request.user
         return obj.organizer == request.user

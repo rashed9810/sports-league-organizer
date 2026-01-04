@@ -31,18 +31,23 @@ class GameViewSet(viewsets.ModelViewSet):
         away_score = request.data.get('away_score')
         
         if home_score is not None and away_score is not None:
+            # Capture old state before update
+            old_home_score = game.home_score
+            old_away_score = game.away_score
+            old_status = game.status
+
             game.home_score = home_score
             game.away_score = away_score
             game.status = 'completed'
             game.save()
             
-            # Update standings
-            self._update_standings(game)
+            # Update standings with old state context
+            self._update_standings(game, old_home_score, old_away_score, old_status)
             
             return Response(GameDetailSerializer(game).data)
         return Response({"detail": "Home score and away score are required."}, status=status.HTTP_400_BAD_REQUEST)
     
-    def _update_standings(self, game):
+    def _update_standings(self, game, old_home_score=None, old_away_score=None, old_status=None):
         """Update team standings after a game is completed"""
         if not game.is_completed or game.home_score is None or game.away_score is None:
             return
@@ -51,6 +56,26 @@ class GameViewSet(viewsets.ModelViewSet):
         home_standing, _ = Standing.objects.get_or_create(league=game.league, team=game.home_team)
         away_standing, _ = Standing.objects.get_or_create(league=game.league, team=game.away_team)
         
+        # If game was already completed, revert previous stats
+        if old_status == 'completed' and old_home_score is not None and old_away_score is not None:
+            # Revert points for
+            home_standing.points_for -= old_home_score
+            home_standing.points_against -= old_away_score
+            away_standing.points_for -= old_away_score
+            away_standing.points_against -= old_home_score
+            
+            # Revert wins/losses/draws
+            if old_home_score > old_away_score:
+                home_standing.wins -= 1
+                away_standing.losses -= 1
+            elif old_away_score > old_home_score:
+                away_standing.wins -= 1
+                home_standing.losses -= 1
+            else:
+                home_standing.draws -= 1
+                away_standing.draws -= 1
+
+        # Add new stats
         # Update points scored
         home_standing.points_for += game.home_score
         home_standing.points_against += game.away_score
@@ -138,6 +163,10 @@ class GameViewSet(viewsets.ModelViewSet):
         
         # Start date is league start date or today if league has already started
         start_date = max(league.start_date, datetime.date.today())
+        
+        if start_date > league.end_date:
+            return 0  # Cannot schedule games if season is over
+            
         game_date = start_date
         
         # Schedule games with 3 days between each game

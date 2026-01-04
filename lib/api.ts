@@ -147,26 +147,70 @@ class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...options.headers,
+    
+    // Helper to get headers with token
+    const getHeaders = () => {
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      };
+      if (this.token) {
+        headers.Authorization = `Bearer ${this.token}`;
+      }
+      return headers;
     };
 
-    if (this.token) {
-      headers.Authorization = `Bearer ${this.token}`;
-    }
-
-    const response = await fetch(url, {
+    let response = await fetch(url, {
       ...options,
-      headers,
+      headers: getHeaders(),
     });
 
-    if (!response.ok) {
-      if (response.status === 401) {
-        // Token expired, clear it
+    // Handle 401 Unauthorized - Refresh Token Check
+    if (response.status === 401) {
+      const refreshToken = typeof window !== 'undefined' ? localStorage.getItem('refresh_token') : null;
+      
+      if (refreshToken) {
+        try {
+          // Attempt to refresh the token
+          const refreshResponse = await fetch(`${this.baseURL}/auth/token/refresh/`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ refresh: refreshToken }),
+          });
+          
+          if (refreshResponse.ok) {
+            const data = await refreshResponse.json();
+            this.setToken(data.access);
+            // If new refresh token provided, update it (though typically just access is returned)
+            if (data.refresh) {
+              localStorage.setItem('refresh_token', data.refresh);
+            }
+            
+            // Retry the original request with new token
+            response = await fetch(url, {
+              ...options,
+              headers: getHeaders(),
+            });
+          } else {
+            // Refresh failed - clean up
+            this.clearToken();
+            window.location.href = '/login'; // Optional: force redirect
+            throw new Error('Session expired. Please login again.');
+          }
+        } catch (error) {
+          // Network or other error during refresh
+          this.clearToken();
+          throw error;
+        }
+      } else {
+        // No refresh token available
         this.clearToken();
         throw new Error('Authentication required');
       }
+    }
+
+    if (!response.ok) {
+        // If we still have an error after retry (or weren't 401)
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.detail || `HTTP ${response.status}`);
     }

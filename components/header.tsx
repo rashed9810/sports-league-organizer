@@ -69,6 +69,7 @@ export default function Header() {
                   pathname === link.href ? "w-full" : "w-0"
                 }`}
               ></span>
+              
             </Link>
           ))}
         </nav>
@@ -225,7 +226,10 @@ export default function Header() {
                           Log in
                         </Button>
                       </Link>
-                      <Link href="/register" onClick={() => setIsMenuOpen(false)}>
+                      <Link
+                        href="/register"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                         <Button className="w-full h-10 bg-primary hover:bg-primary/90 hover:shadow-md hover:shadow-primary/20 transition-all">
                           Sign up
                         </Button>

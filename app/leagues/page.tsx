@@ -1,39 +1,17 @@
-"use client"
-
-import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { Trophy, Plus, Calendar, Loader2 } from "lucide-react"
-import { apiClient, League } from "@/lib/api"
-import { useAuth } from "@/contexts/auth-context"
-import { useToast } from "@/hooks/use-toast"
+import { Trophy, Calendar } from "lucide-react"
+import { apiClient } from "@/lib/api"
+import { LeagueListActions, LeagueEmptyStateActions } from "@/components/leagues/league-list-actions"
+import { LeagueCardActions } from "@/components/leagues/league-card-actions"
 
-export default function LeaguesPage() {
-  const [leagues, setLeagues] = useState<League[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const { isAuthenticated } = useAuth()
-  const { toast } = useToast()
+// Revalidate data every 60 seconds
+export const revalidate = 60
 
-  useEffect(() => {
-    const fetchLeagues = async () => {
-      try {
-        const leaguesData = await apiClient.getLeagues()
-        setLeagues(leaguesData)
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load leagues",
-          variant: "destructive",
-        })
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    fetchLeagues()
-  }, [])
+export default async function LeaguesPage() {
+  const leagues = await apiClient.getLeagues()
 
   const getStatusVariant = (status: string) => {
     switch (status.toLowerCase()) {
@@ -47,15 +25,6 @@ export default function LeaguesPage() {
         return 'outline'
     }
   }
-  if (isLoading) {
-    return (
-      <div className="container py-10">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin" />
-        </div>
-      </div>
-    )
-  }
 
   return (
     <div className="container py-10">
@@ -64,14 +33,7 @@ export default function LeaguesPage() {
           <h1 className="text-3xl font-bold tracking-tight">Leagues</h1>
           <p className="text-muted-foreground mt-1">Browse and manage sports leagues</p>
         </div>
-        {isAuthenticated && (
-          <Link href="/leagues/create">
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Create League
-            </Button>
-          </Link>
-        )}
+        <LeagueListActions />
       </div>
 
       {leagues.length === 0 ? (
@@ -79,18 +41,9 @@ export default function LeaguesPage() {
           <Trophy className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
           <h3 className="text-lg font-semibold mb-2">No leagues found</h3>
           <p className="text-muted-foreground mb-4">
-            {isAuthenticated
-              ? "Create your first league to get started"
-              : "Sign in to view and manage leagues"}
+            Create your first league to get started
           </p>
-          {isAuthenticated && (
-            <Link href="/leagues/create">
-              <Button>
-                <Plus className="mr-2 h-4 w-4" />
-                Create League
-              </Button>
-            </Link>
-          )}
+          <LeagueEmptyStateActions />
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -130,11 +83,7 @@ export default function LeaguesPage() {
                 <Link href={`/leagues/${league.id}`}>
                   <Button variant="outline">View Details</Button>
                 </Link>
-                {isAuthenticated && (
-                  <Link href={`/leagues/${league.id}/manage`}>
-                    <Button variant="secondary">Manage League</Button>
-                  </Link>
-                )}
+                <LeagueCardActions leagueId={league.id} />
               </CardFooter>
             </Card>
           ))}
