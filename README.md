@@ -4,7 +4,7 @@ A **complete, production-ready** full-stack web application for managing local s
 
 ![Sports League Organizer](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Frontend](https://img.shields.io/badge/Frontend-Next.js%2014-blue) ![Backend](https://img.shields.io/badge/Backend-Django%204.2-green) ![Database](https://img.shields.io/badge/Database-SQLite-orange)
 
-##  Project Status: **100% COMPLETE**
+
 
 The Sports League Organizer is a **fully functional, production-ready** application built with Next.js 14 (frontend) and Django 4.2 (backend). It provides comprehensive tools for sports league administrators, team managers, players, and fans to organize and participate in local sports leagues.
 
