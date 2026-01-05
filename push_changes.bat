@@ -1,9 +1,0 @@
-@echo off
-echo Adding files...
-git add README.md app/leagues/[id]/manage/page.tsx app/teams/[id]/edit/page.tsx
-echo Committing changes...
-git commit -m "Fix build errors and enhance mobile responsiveness"
-echo Pushing to GitHub...
-git push origin master
-echo Done!
-pause
